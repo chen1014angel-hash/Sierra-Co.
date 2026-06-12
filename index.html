@@ -7,6 +7,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
     
     <style>
         /* --- 基礎樣式設定 (大地色系 Wabi-Sabi 風格) --- */
@@ -62,6 +63,25 @@
             color: var(--text-dark);
         }
 
+        /* --- 漢堡選單按鈕本體 --- */
+        .menu-toggle {
+            display: none; /* 桌機預設隱藏 */
+            flex-direction: column;
+            justify-content: space-between;
+            width: 24px;
+            height: 16px;
+            cursor: pointer;
+            z-index: 1002;
+        }
+
+        .menu-toggle .bar {
+            width: 100%;
+            height: 1.5px;
+            background-color: var(--text-dark);
+            transition: var(--transition);
+        }
+
+        /* 桌機版橫式選單樣式 */
         .nav-links {
             display: flex;
             list-style: none;
@@ -105,7 +125,6 @@
             position: relative;
             background: linear-gradient(rgba(58,53,48,0.2), rgba(58,53,48,0.2)), 
                         url('https://images.unsplash.com/photo-1565192647048-f997ded879f0?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
-            /* 提示：此處背景圖可替換為工作室手拉胚照片 */
         }
 
         .hero-content {
@@ -241,7 +260,7 @@
             color: var(--text-muted);
             font-size: 0.95rem;
             margin-bottom: 30px;
-            height: 75px; /* 固定高度保持對齊 */
+            height: 75px; 
         }
 
         .btn-secondary {
@@ -344,15 +363,73 @@
             letter-spacing: 1px;
         }
 
-        /* --- 動態與響應式 RWD --- */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* --- 📱 手機版 RWD 樣式 (關鍵修改：靠右、上至下落下的不滿版選單) --- */
         @media (max-width: 968px) {
-            header { padding: 20px 30px; }
-            .nav-links { display: none; } /* 簡化手機版，實務上可加上漢堡選單 */
+            header { 
+                padding: 20px 30px; 
+            }
+            
+            /* 1. 顯示漢堡按鈕，並確保它在最右側 */
+            .menu-toggle { 
+                display: flex; 
+                order: 2; /* 強制排在後面 */
+            }
+
+            /* 2. 漢堡按鈕點擊變成 X */
+            .menu-toggle.active .bar:nth-child(1) {
+                transform: translateY(7px) rotate(45deg);
+            }
+            .menu-toggle.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+            .menu-toggle.active .bar:nth-child(3) {
+                transform: translateY(-7px) rotate(-45deg);
+            }
+
+            /* 3. 重構選單：由上往下落下、不滿版、靠右 */
+            .nav-links {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-end; /* 文字內容靠右對齊 */
+                
+                position: absolute;
+                top: 100%; /* 從 Header 底部往下開 */
+                right: 30px; /* 靠右對齊，留上一點高級感的邊距 */
+                
+                width: 200px; /* 設定小巧的不滿版寬度 */
+                padding: 25px 20px;
+                background-color: rgba(249, 246, 240, 0.98); /* 燕麥白 */
+                box-shadow: 0 10px 30px rgba(58, 53, 48, 0.08); /* 淡淡的陰影 */
+                gap: 20px;
+                list-style: none;
+                
+                /* 下拉與消失動畫 */
+                opacity: 0;
+                transform: translateY(-15px); 
+                pointer-events: none;
+                transition: var(--transition);
+                z-index: 1000;
+            }
+
+            /* 4. 當點擊啟動時，展開選單 */
+            .nav-links.active {
+                opacity: 1;
+                transform: translateY(0);
+                pointer-events: auto;
+            }
+
+            .nav-links a {
+                font-size: 1rem;
+                width: 100%;
+                text-align: right;
+            }
+            
             .about { flex-direction: column; padding: 80px 5%; gap: 40px; }
             .gallery-grid { grid-template-columns: repeat(2, 1fr); }
             .hero-content h1 { font-size: 2.5rem; }
@@ -367,6 +444,13 @@
 
     <header>
         <div class="logo">Sierra & Co.</div>
+        
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        
         <nav>
             <ul class="nav-links">
                 <li><a href="#about">工作室理念</a></li>
@@ -471,5 +555,34 @@
         </div>
     </footer>
 
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuToggle = document.getElementById('mobile-menu');
+            const navLinks = document.querySelector('.nav-links');
+
+            // 1. 點擊漢堡按鈕，切換 active 狀態
+            menuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                menuToggle.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+
+            // 2. 點擊選單內的任意連結，自動關閉下拉選單
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    menuToggle.classList.remove('active');
+                    navLinks.classList.remove('active');
+                });
+            });
+
+            // 3. 點擊頁面其他空白地方，也幫忙自動收合
+            document.addEventListener('click', (e) => {
+                if (!menuToggle.contains(e.target) && !navLinks.contains(e.target)) {
+                    menuToggle.classList.remove('active');
+                    navLinks.classList.remove('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

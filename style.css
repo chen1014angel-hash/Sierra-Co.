@@ -1,0 +1,112 @@
+/* --- 漢堡選單基礎樣式 (桌機版隱藏) --- */
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 24px;
+    height: 18px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.menu-toggle .bar {
+    width: 100%;
+    height: 1.5px;
+    background-color: var(--text-dark);
+    transition: var(--transition);
+}
+
+/* --- 📱 手機版 RWD 樣式 (上方滿版、左右吃滿、高度半版) --- */
+        @media (max-width: 968px) {
+            header { 
+                padding: 20px 30px; 
+                position: fixed; /* 確保導覽列固定在最頂端 */
+                width: 100%;
+                top: 0;
+                left: 0;
+            }
+            
+            /* 1. 顯示漢堡按鈕，並確保它在最右側 */
+            .menu-toggle { 
+                display: flex; 
+                order: 2; /* 強制排在 logo 後面 */
+                position: relative;
+                z-index: 1002; /* 確保 X 按鈕在選單上層 */
+            }
+
+            /* 2. 漢堡按鈕點擊變成 X */
+            .menu-toggle.active .bar:nth-child(1) {
+                transform: translateY(7px) rotate(45deg);
+            }
+            .menu-toggle.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+            .menu-toggle.active .bar:nth-child(3) {
+                transform: translateY(-7px) rotate(-45deg);
+            }
+
+            /* 3. 重構選單：上方滿版、左右吃滿（100%）、高度半版 */
+            .nav-links {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-start; /* 文字靠左對齊，與你截圖的風格一致 */
+                
+                position: fixed;
+                top: -100%; /* 預設完全藏在螢幕上方外面 */
+                left: 0;
+                
+                /* 關鍵寬高度：左右兩側完全吃滿（100%寬），高度只佔據上半部 */
+                width: 100vw; 
+                /* 可依需求調整高度，例如 55vh 代表佔據螢幕高度的 55% */
+                height: 55vh; 
+                
+                /* 上方留出 header 的厚度（大約 80px），避免選單字體與 Logo 重疊 */
+                padding: 90px 40px 40px 40px; 
+                
+                background-color: #ffffff; /* 純白背景 */
+                box-shadow: 0 10px 30px rgba(58, 53, 48, 0.08); /* 下方淡淡的優雅陰影 */
+                gap: 25px; /* 選項之間的間距 */
+                list-style: none;
+                
+                /* 由上往下掉落的流暢動畫 */
+                opacity: 0;
+                pointer-events: none;
+                transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
+                z-index: 1001;
+            }
+
+            /* 4. 當點擊啟動時，由上往下垂直掉落滑入（往下推移到 top: 0 的位置） */
+            .nav-links.active {
+                opacity: 1;
+                transform: translateY(100%); /* 配合 top: -100% 剛好完美貼齊頂部展開 */
+                pointer-events: auto;
+            }
+
+            /* 5. 選單選項的分隔線設計 */
+            .nav-links li {
+                width: 100%;
+                border-bottom: 1px solid #f0ede7; /* 隱隱約約的下分界線 */
+                padding-bottom: 12px;
+            }
+
+            .nav-links a {
+                font-size: 1.05rem;
+                font-weight: 400;
+                color: var(--text-dark);
+                display: block;
+                width: 100%;
+                text-align: left;
+                letter-spacing: 2px;
+            }
+            
+            /* 移除桌機版的 hover 線條效果 */
+            .nav-links a::after {
+                display: none;
+            }
+            
+            /* 原有的其餘區塊 RWD 保持不變 */
+            .about { flex-direction: column; padding: 80px 5%; gap: 40px; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
+            .hero-content h1 { font-size: 2.5rem; }
+        }
