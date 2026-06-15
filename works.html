@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>職人作品 | Sierra & Co. 雲岫陶藝工作室</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 承襲首頁基礎樣式設定 --- */
+        :root {
+            --bg-color: #f9f6f0;       /* 溫潤燕麥白 */
+            --text-dark: #3a3530;     /* 深炭褐 */
+            --text-muted: #7c7267;    /* 淺泥灰 */
+            --accent-clay: #b07d62;   /* 陶土赤紅 */
+            --accent-sand: #e6dfd3;   /* 沙礫膚色 */
+            --transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+        }
+
+        /* --- 導覽列 Navigation --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 25px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(249, 246, 240, 0.85);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(58, 53, 48, 0.05);
+        }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            letter-spacing: 3px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 24px;
+            height: 16px;
+            cursor: pointer;
+            z-index: 1002;
+        }
+
+        .menu-toggle .bar {
+            width: 100%;
+            height: 1.5px;
+            background-color: var(--text-dark);
+            transition: var(--transition);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+        }
+
+        .nav-links a {
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            font-weight: 400;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--accent-clay);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover, .nav-links .active-page {
+            color: var(--accent-clay);
+        }
+        
+        .nav-links .active-page::after {
+            width: 100%;
+        }
+
+        /* --- 頁面標頭 Page Header --- */
+        .page-title-section {
+            padding: 180px 10% 60px 10%;
+            text-align: center;
+            background-color: var(--accent-sand);
+        }
+
+        .section-tag {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-clay);
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .page-title {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 2.5rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            margin-bottom: 15px;
+        }
+
+        .page-desc {
+            color: var(--text-muted);
+            font-size: 1rem;
+            letter-spacing: 1px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* --- 作品篩選器 Filter --- */
+        .filter-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            padding: 40px 10px;
+            background-color: var(--bg-color);
+        }
+
+        .filter-btn {
+            background: none;
+            border: none;
+            font-family: 'Noto Sans TC', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            cursor: pointer;
+            padding: 5px 10px;
+            letter-spacing: 1px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        /* --- 作品藝廊本體 --- */
+        .gallery-section {
+            padding: 20px 10% 120px 10%;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            height: 400px;
+            background-color: var(--accent-sand);
+            /* 用於篩選器的動畫效果 */
+            transition: opacity 0.4s ease, transform 0.4s ease; 
+        }
+
+        /* 當被隱藏時的樣式 */
+        .gallery-item.hide {
+            display: none;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(58, 53, 48, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            opacity: 0;
+            transition: var(--transition);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-overlay h3 {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 1.25rem;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+
+        .gallery-overlay span {
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+            opacity: 0.8;
+        }
+
+        /* --- 聯絡與資訊 Footer --- */
+        footer {
+            background-color: var(--text-dark);
+            color: var(--accent-sand);
+            padding: 80px 10% 40px 10%;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+            margin-bottom: 60px;
+        }
+
+        .footer-box h4 {
+            font-family: 'Cinzel', 'Noto Serif TC', serif;
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+
+        .footer-box p, .footer-box li {
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            opacity: 0.8;
+            list-style: none;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid rgba(230, 223, 211, 0.1);
+            font-size: 0.8rem;
+            opacity: 0.5;
+            letter-spacing: 1px;
+        }
+
+        /* --- 📱 RWD 行動裝置樣式 --- */
+        @media (max-width: 968px) {
+            header { 
+                padding: 20px 30px; 
+            }
+            
+            .menu-toggle { 
+                display: flex; 
+                order: 2;
+            }
+
+            .menu-toggle.active .bar:nth-child(1) {
+                transform: translateY(7px) rotate(45deg);
+            }
+            .menu-toggle.active .bar:nth-child(2) {
+                opacity: 0;
+            }
+            .menu-toggle.active .bar:nth-child(3) {
+                transform: translateY(-7px) rotate(-45deg);
+            }
+
+            .nav-links {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-end;
+                position: absolute;
+                top: 100%;
+                right: 30px;
+                width: 200px;
+                padding: 25px 20px;
+                background-color: rgba(249, 246, 240, 0.98);
+                box-shadow: 0 10px 30px rgba(58, 53, 48, 0.08);
+                gap: 20px;
+                list-style: none;
+                opacity: 0;
+                transform: translateY(-15px); 
+                pointer-events: none;
+                transition: var(--transition);
+                z-index: 1000;
+            }
+
+            .nav-links.active {
+                opacity: 1;
+                transform: translateY(0);
+                pointer-events: auto;
+            }
+
+            .nav-links a {
+                font-size: 1rem;
+                width: 100%;
+                text-align: right;
+            }
+
+            .page-title-section { padding: 140px 5% 40px 5%; }
+            .page-title { font-size: 2rem; }
+            .gallery-section { padding: 20px 5% 80px 5%; }
+            .gallery-grid { grid-template-columns: repeat(2, 1fr); gap: 20px; }
+            .gallery-item { height: 300px; }
+        }
+
+        @media (max-width: 576px) {
+            .gallery-grid { grid-template-columns: 1fr; }
+            .filter-container { gap: 10px; flex-wrap: wrap; }
+            .filter-btn { font-size: 0.85rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Sierra & Co.</div>
+        
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html#about">工作室理念</a></li>
+                <li><a href="index.html#courses">體驗課程</a></li>
+                <li><a href="gallery.html" class="active-page">職人作品</a></li>
+                <li><a href="index.html#contact">聯絡我們</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-title-section">
+        <span class="section-tag">COLLECTION</span>
+        <h1 class="page-title">雲岫手製陶器</h1>
+        <p class="page-desc">揉合黏土、礦石與火候，淬煉出融入日常的侘寂美學。每一件作品，皆帶有職人手心的溫度與獨一無二的肌理。</p>
+    </section>
+
+    <div class="filter-container">
+        <button class="filter-btn active" data-filter="all">全部作品</button>
+        <button class="filter-btn" data-filter="tea">品茗茶器</button>
+        <button class="filter-btn" data-filter="vase">空間花器</button>
+        <button class="filter-btn" data-filter="tableware">生活食器</button>
+    </div>
+
+    <section class="gallery-section">
+        <div class="gallery-grid">
+            <div class="gallery-item" data-category="tableware">
+                <img src="雪口系列 - 刻痕杯.png" alt="雪口馬克杯">
+                <div class="gallery-overlay">
+                    <h3>雪口系列 - 刻痕杯</h3>
+                    <span>生活食器</span>
+                </div>
+            </div>
+            <div class="gallery-item" data-category="tea">
+                <img src="https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=600&q=80" alt="柴燒茶碗">
+                <div class="gallery-overlay">
+                    <h3>柴燒手拉胚 - 茶碗</h3>
+                    <span>品茗茶器</span>
+                </div>
+            </div>
+            <div class="gallery-item" data-category="vase">
+                <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=600&q=80" alt="礦質花器">
+                <div class="gallery-overlay">
+                    <h3>結晶釉 - 礦質花器</h3>
+                    <span>空間花器</span>
+                </div>
+            </div>
+            <div class="gallery-item" data-category="tea">
+                <img src="https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?auto=format&fit=crop&w=600&q=80" alt="青瓷茶壺">
+                <div class="gallery-overlay">
+                    <h3>薄霧青瓷 - 側把壺</h3>
+                    <span>品茗茶器</span>
+                </div>
+            </div>
+            <div class="gallery-item" data-category="tableware">
+                <img src="https://images.unsplash.com/photo-1610701596007-11502861afaa?auto=format&fit=crop&w=600&q=80" alt="粗砂淺盤">
+                <div class="gallery-overlay">
+                    <h3>粗砂灰泥 - 點心淺盤</h3>
+                    <span>生活食器</span>
+                </div>
+            </div>
+            <div class="gallery-item" data-category="vase">
+                <img src="https://images.unsplash.com/photo-1581781870027-04212e231e96?auto=format&fit=crop&w=600&q=80" alt="柴燒花器">
+                <div class="gallery-overlay">
+                    <h3>落灰柴燒 - 圓融花器</h3>
+                    <span>空間花器</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-box">
+                <h4>Sierra & Co.</h4>
+                <p>一件對的器皿，足以撐起整個空間的氣韻。</p>
+            </div>
+            <div class="footer-box">
+                <h4>聯絡與空間資訊</h4>
+                <ul>
+                    <li>電話：(02) 2931-0908</li>
+                    <li>信箱：Sierraco2026@gmail.com</li>
+                    <li>地址：台北市文山區臨山路一段 166 號</li>
+                </ul>
+            </div>
+            <div class="footer-box">
+                <h4>營業時間</h4>
+                <ul>
+                    <li>週二 — 週日：10:00 - 19:00</li>
+                    <li>固定休館日：每週一</li>
+                    <li>*體驗課程皆採預約制</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Sierra & Co. 雲岫陶藝工作室. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. RWD 漢堡選單邏輯
+            const menuToggle = document.getElementById('mobile-menu');
+            const navLinks = document.querySelector('.nav-links');
+
+            menuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                menuToggle.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.addEventListener('click', () => {
+                    menuToggle.classList.remove('active');
+                    navLinks.classList.remove('active');
+                });
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!menuToggle.contains(e.target) && !navLinks.contains(e.target)) {
+                    menuToggle.classList.remove('active');
+                    navLinks.classList.remove('active');
+                }
+            });
+
+            // 2. 作品分類篩選器邏輯
+            const filterButtons = document.querySelectorAll('.filter-btn');
+            const galleryItems = document.querySelectorAll('.gallery-item');
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', () => {
+                    // 切換按鈕 active 樣式
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    button.classList.add('active');
+
+                    const filterValue = button.getAttribute('data-filter');
+
+                    // 篩選作品顯示/隱藏
+                    galleryItems.forEach(item => {
+                        const itemCategory = item.getAttribute('data-category');
+                        if (filterValue === 'all' || filterValue === itemCategory) {
+                            item.classList.remove('hide');
+                        } else {
+                            item.classList.add('hide');
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
