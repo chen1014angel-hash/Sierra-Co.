@@ -380,6 +380,37 @@
             .booking-container { padding: 40px 25px; }
             .hero-content h1 { font-size: 2.2rem; }
         }
+
+        /* --- 回到頂部按鈕 --- */
+        #scroll-top-btn {
+            position: fixed;
+            right: 24px;
+            bottom: 30px;
+            width: 48px;
+            height: 48px;
+            border: none;
+            border-radius: 50%;
+            background-color: var(--accent-clay);
+            color: #fff;
+            font-size: 1.4rem;
+            cursor: pointer;
+            box-shadow: 0 12px 28px rgba(176, 125, 98, 0.22);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(10px);
+            transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s ease;
+            z-index: 1003;
+        }
+
+        #scroll-top-btn.visible {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        #scroll-top-btn:hover {
+            background-color: #98624e;
+        }
     </style>
 </head>
 <body>
@@ -468,7 +499,7 @@
 
     <section class="booking-section" id="booking">
         <span class="section-tag">RESERVATION</span>
-        <h2 class="section-title">預約預備你的陶藝時光</h2>
+        <h2 class="section-title">預約你的陶藝時光</h2>
         
         <div class="booking-container">
             <form action="#" method="POST">
@@ -554,7 +585,24 @@
                     navLinks.classList.remove('active');
                 }
             });
+
+            const scrollTopBtn = document.getElementById('scroll-top-btn');
+
+            if (scrollTopBtn) {
+                window.addEventListener('scroll', () => {
+                    if (window.scrollY > 300) {
+                        scrollTopBtn.classList.add('visible');
+                    } else {
+                        scrollTopBtn.classList.remove('visible');
+                    }
+                });
+
+                scrollTopBtn.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                });
+            }
         });
     </script>
+    <button id="scroll-top-btn" aria-label="回到頂部">↑</button>
 </body>
 </html>
