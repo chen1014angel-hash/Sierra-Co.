@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>體驗課程 | Sierra & Co. 雲岫陶藝工作室</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Noto+Sans+TC:wght@300;400;500&family=Noto+Serif+TC:wght@400;600&display=swap" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+    
+    <style>
+        /* --- 基礎樣式設定 (延續首頁 Wabi-Sabi 風格) --- */
+        :root {
+            --bg-color: #f9f6f0;       /* 溫潤燕麥白 */
+            --text-dark: #3a3530;     /* 深炭褐 */
+            --text-muted: #7c7267;    /* 淺泥灰 */
+            --accent-clay: #b07d62;   /* 陶土赤紅 */
+            --accent-sand: #e6dfd3;   /* 沙礫膚色 */
+            --transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-dark);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: var(--transition);
+        }
+
+        /* --- 導覽列 Navigation --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 25px 50px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            background-color: rgba(249, 246, 240, 0.85);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-family: 'Cinzel', serif;
+            font-size: 1.5rem;
+            letter-spacing: 3px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .menu-toggle {
+            display: none;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 24px;
+            height: 16px;
+            cursor: pointer;
+            z-index: 1002;
+        }
+
+        .menu-toggle .bar {
+            width: 100%;
+            height: 1.5px;
+            background-color: var(--text-dark);
+            transition: var(--transition);
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 40px;
+        }
+
+        .nav-links a {
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            font-weight: 400;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 1px;
+            bottom: -5px;
+            left: 0;
+            background-color: var(--accent-clay);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::after { width: 100%; }
+        .nav-links a:hover { color: var(--accent-clay); }
+
+        /* --- 內頁專用次級 Banner --- */
+        .page-hero {
+            height: 60vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 0 20px;
+            position: relative;
+            background: linear-gradient(rgba(58,53,48,0.4), rgba(58,53,48,0.4)), 
+                        url('https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+        }
+
+        .hero-content {
+            color: #fff;
+            animation: fadeIn 1.5s ease;
+        }
+
+        .hero-content h1 {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 3rem;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .hero-content p {
+            font-size: 1rem;
+            letter-spacing: 3px;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        /* --- 課程詳細介紹 Section (交錯排版) --- */
+        .course-detail-section {
+            padding: 120px 10%;
+        }
+
+        .section-tag {
+            font-family: 'Cinzel', serif;
+            color: var(--accent-clay);
+            font-size: 0.85rem;
+            letter-spacing: 3px;
+            display: block;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .section-title {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 2.2rem;
+            font-weight: 500;
+            margin-bottom: 80px;
+            letter-spacing: 1px;
+            text-align: center;
+        }
+
+        .course-detail-item {
+            display: flex;
+            align-items: center;
+            gap: 80px;
+            margin-bottom: 100px;
+        }
+
+        .course-detail-item:nth-child(even) {
+            flex-direction: row-reverse;
+        }
+
+        .course-detail-img {
+            flex: 1;
+        }
+
+        .course-detail-img img {
+            width: 100%;
+            height: 450px;
+            object-fit: cover;
+        }
+
+        .course-detail-text {
+            flex: 1;
+        }
+
+        .course-detail-text h3 {
+            font-family: 'Noto Serif TC', serif;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .course-detail-price {
+            color: var(--accent-clay);
+            font-size: 1.2rem;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 25px;
+        }
+
+        .course-detail-text p {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+
+        .course-info-list {
+            margin-top: 25px;
+            list-style: none;
+            border-top: 1px solid var(--accent-sand);
+            padding-top: 20px;
+        }
+
+        .course-info-list li {
+            font-size: 0.95rem;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .course-info-list span {
+            color: var(--text-muted);
+            margin-right: 10px;
+        }
+
+        /* --- 預約表單設計 --- */
+        .booking-section {
+            background-color: var(--accent-sand);
+            padding: 100px 10%;
+        }
+
+        .booking-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background-color: var(--bg-color);
+            padding: 60px 50px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            color: var(--text-dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #dcd6cd;
+            background-color: transparent;
+            font-family: inherit;
+            color: var(--text-dark);
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--accent-clay);
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: var(--text-dark);
+            color: var(--bg-color);
+            border: none;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 40px;
+        }
+
+        .btn-submit:hover {
+            background-color: var(--accent-clay);
+        }
+
+        /* --- 聯絡與資訊 Footer --- */
+        footer {
+            background-color: var(--text-dark);
+            color: var(--accent-sand);
+            padding: 80px 10% 40px 10%;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 50px;
+            margin-bottom: 60px;
+        }
+
+        .footer-box h4 {
+            font-family: 'Cinzel', 'Noto Serif TC', serif;
+            font-size: 1.2rem;
+            margin-bottom: 25px;
+            letter-spacing: 2px;
+            color: #fff;
+        }
+
+        .footer-box p, .footer-box li {
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            opacity: 0.8;
+            list-style: none;
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 40px;
+            border-top: 1px solid rgba(230, 223, 211, 0.1);
+            font-size: 0.8rem;
+            opacity: 0.5;
+            letter-spacing: 1px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- 📱 RWD 手機版樣式 --- */
+        @media (max-width: 968px) {
+            header { padding: 20px 30px; }
+            .menu-toggle { display: flex; order: 2; }
+
+            .menu-toggle.active .bar:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+            .menu-toggle.active .bar:nth-child(2) { opacity: 0; }
+            .menu-toggle.active .bar:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+            .nav-links {
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: flex-end;
+                position: absolute;
+                top: 100%;
+                right: 30px;
+                width: 200px;
+                padding: 25px 20px;
+                background-color: rgba(249, 246, 240, 0.98);
+                box-shadow: 0 10px 30px rgba(58, 53, 48, 0.08);
+                gap: 20px;
+                opacity: 0;
+                transform: translateY(-15px); 
+                pointer-events: none;
+                transition: var(--transition);
+                z-index: 1000;
+            }
+
+            .nav-links.active {
+                opacity: 1;
+                transform: translateY(0);
+                pointer-events: auto;
+            }
+
+            .nav-links a { font-size: 1rem; width: 100%; text-align: right; }
+            
+            .course-detail-item, .course-detail-item:nth-child(even) {
+                flex-direction: column;
+                gap: 30px;
+                margin-bottom: 70px;
+            }
+            .course-detail-img img { height: 300px; }
+            .booking-container { padding: 40px 25px; }
+            .hero-content h1 { font-size: 2.2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">Sierra & Co.</div>
+        
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        
+        <nav>
+            <ul class="nav-links">
+                <li><a href="index.html#about">工作室理念</a></li>
+                <li><a href="courses.html" style="color: var(--accent-clay);">體驗課程</a></li>
+                <li><a href="gallery.html">職人作品</a></li>
+                <li><a href="index.html#contact">聯絡我們</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="page-hero">
+        <div class="hero-content">
+            <h1>手作體驗與課程</h1>
+            <p>與泥土對話，找回內心的平靜與本質</p>
+        </div>
+    </section>
+
+    <section class="course-detail-section">
+        <span class="section-tag">WORKSHOPS</span>
+        <h2 class="section-title">尋找適合你的陶藝日常</h2>
+
+        <div class="course-detail-item">
+            <div class="course-detail-img">
+                <img src="手拉坯一日體驗.png" alt="手拉坯一日體驗">
+            </div>
+            <div class="course-detail-text">
+                <h3>手拉坯一日體驗</h3>
+                <span class="course-detail-price">NT$ 1,200 / 堂</span>
+                <p>專為初學者設計的單次體驗課。在專業職人的輕柔帶領下，你將學會如何讓泥土在旋轉的轉盤上穩住重心。當手掌與濕潤的泥土貼合，順著力道拉高、塑型，那是一種極度需要專注且療癒的過程。</p>
+                <p>本課程將協助你完成一件屬於自己的器皿（如杯、碗、小花器），親身感受創作者在器物上留下的首道指紋。</p>
+                <ul class="course-info-list">
+                    <li><span>課程時間：</span>約 1.5 - 2 小時</li>
+                    <li><span>費用包含：</span>專業指導、材料土資、基礎單色釉燒基礎費</li>
+                    <li><span>成品件數：</span>可帶回 1 件燒製作品（如需多燒製第二件，酌收燒窯費）</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="course-detail-item">
+            <div class="course-detail-img">
+                <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&w=800&q=80" alt="生活手捏陶企劃">
+            </div>
+            <div class="course-detail-text">
+                <h3>生活手捏陶企劃</h3>
+                <span class="course-detail-price">NT$ 1,500 / 堂</span>
+                <p>手捏陶跳脫了手拉坯的完美圓形框架。透過雙手的搓、揉、捏、壓，你可以自由創作出帶有自然有機線盤的食器或物件。適合用來製作不規則馬克杯、點心圓盤、或是風格獨特的室內植物花器。</p>
+                <p>我們鼓勵保留泥土最原始的肌理和按壓痕跡，那是不完美的完美，最具備 Wabi-Sabi 的精神美感。</p>
+                <ul class="course-info-list">
+                    <li><span>課程時間：</span>約 2 小時</li>
+                    <li><span>費用包含：</span>師資指導、日本或台灣陶土、特殊質感釉料、燒窯費</li>
+                    <li><span>成品件數：</span>可自由創作成型 1-2 件作品（視作品大小而定）</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="course-detail-item">
+            <div class="course-detail-img">
+                <img src="https://images.unsplash.com/photo-1578749556568-bc2c40e68b61?auto=format&fit=crop&w=800&q=80" alt="職人包月研習班">
+            </div>
+            <div class="course-detail-text">
+                <h3>職人包月研習班</h3>
+                <span class="course-detail-price">NT$ 8,500 / 月</span>
+                <p>針對想深度培養陶藝興趣、完整掌握一門工藝的你。課程將從基礎練土開始，逐步進階到大件器型拉坏技法、精細修坯扣底、雙重上釉指導與窯爐燒成觀念。</p>
+                <p>包月期間內，工作室於營業時間內全面對學員開放自主練習，不限練習次數與土量，給予你最寬廣的創作空間。</p>
+                <ul class="course-info-list">
+                    <li><span>研習天數：</span>固定每週 1 堂正課（全月共 4 堂），其餘時間自由實作</li>
+                    <li><span>對象限制：</span>適合完全零基礎但想深度學習者，或已有陶藝經驗者</li>
+                    <li><span>費用包含：</span>正課指導、全月無限次使用非限定土資（燒窯費依體積另計）</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="booking-section" id="booking">
+        <span class="section-tag">RESERVATION</span>
+        <h2 class="section-title">預約預備你的陶藝時光</h2>
+        
+        <div class="booking-container">
+            <form action="#" method="POST">
+                <div class="form-group">
+                    <label for="name">預約人姓名</label>
+                    <input type="text" id="name" name="name" class="form-control" placeholder="請輸入您的真實姓名" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="phone">聯絡電話</label>
+                    <input type="tel" id="phone" name="phone" class="form-control" placeholder="請輸入手機號碼" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="course-type">選擇體驗項目</label>
+                    <select id="course-type" name="course-type" class="form-control" required>
+                        <option value="" disabled selected>請選擇您想體驗的課程</option>
+                        <option value="wheel">手拉坯一日體驗 (NT$ 1,200)</option>
+                        <option value="hand">生活手捏陶企劃 (NT$ 1,500)</option>
+                        <option value="month">職人包月研習班 (NT$ 8,500)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="date">偏好預約日期</label>
+                    <input type="date" id="date" name="date" class="form-control" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">備註（如人數或特殊需求）</label>
+                    <textarea id="notes" name="notes" class="form-control" rows="4" placeholder="若有多人同行，請在此註明人數..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit">送出預約申請</button>
+            </form>
+        </div>
+    </section>
+
+    <footer id="contact">
+        <div class="footer-content">
+            <div class="footer-box">
+                <h4>Sierra & Co.</h4>
+                <p>一件對的器皿，足以撐起整個空間的氣韻。</p>
+            </div>
+            <div class="footer-box">
+                <h4>聯絡與空間資訊</h4>
+                <ul>
+                    <li>電話：(02) 2931-0908</li>
+                    <li>信箱：Sierraco2026@gmail.com</li>
+                    <li>地址：台北市文山區臨山路一段 166 號</li>
+                </ul>
+            </div>
+            <div class="footer-box">
+                <h4>營業時間</h4>
+                <ul>
+                    <li>週二 — 週日：10:00 - 19:00</li>
+                    <li>固定休館日：每週一</li>
+                    <li>*體驗課程皆採預約制</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 Sierra & Co. 雲岫陶藝工作室. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuToggle = document.getElementById('mobile-menu');
+            const navLinks = document.querySelector('.nav-links');
+
+            // 1. 漢堡選單切換
+            menuToggle.addEventListener('click', (e) => {
+                e.stopPropagation();
+                menuToggle.classList.toggle('active');
+                navLinks.classList.toggle('active');
+            });
+
+            // 2. 點擊空白處關閉選單
+            document.addEventListener('click', (e) => {
+                if (!menuToggle.contains(e.target) && !navLinks.contains(e.target)) {
+                    menuToggle.classList.remove('active');
+                    navLinks.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
