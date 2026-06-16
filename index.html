@@ -496,7 +496,7 @@
         <div class="hero-content">
             <h1>雲岫 Sierra & Co.</h1>
             <p>用手心的溫度，盛裝日常的詩意</p>
-            <a href="#courses" class="btn-primary">預約手作體驗</a>
+            <a href="courses.html" class="btn-primary">預約手作體驗</a>
         </div>
     </section>
 
@@ -600,9 +600,17 @@
 
             // 2. 點擊選單內的任意連結，自動關閉下拉選單
             document.querySelectorAll('.nav-links a').forEach(link => {
-                link.addEventListener('click', () => {
+                link.addEventListener('click', (e) => {
+                    const href = link.getAttribute('href');
+                    
+                    // 關閉選單
                     menuToggle.classList.remove('active');
                     navLinks.classList.remove('active');
+                    
+                    // 如果是跨頁連結（如 courses.html、gallery.html），允許正常導航
+                    if (href && !href.startsWith('#')) {
+                        return;
+                    }
                 });
             });
 
