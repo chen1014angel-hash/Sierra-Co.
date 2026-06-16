@@ -191,11 +191,9 @@
             overflow: hidden;
             height: 400px;
             background-color: var(--accent-sand);
-            /* 用於篩選器的動畫效果 */
             transition: opacity 0.4s ease, transform 0.4s ease; 
         }
 
-        /* 當被隱藏時的樣式 */
         .gallery-item.hide {
             display: none;
         }
@@ -365,7 +363,7 @@
             <ul class="nav-links">
                 <li><a href="index.html#about">工作室理念</a></li>
                 <li><a href="index.html#courses">體驗課程</a></li>
-                <li><a class="職人作品" href="gallery.html">職人作品</a></li>
+                <li><a href="gallery.html" class="active-page">職人作品</a></li>
                 <li><a href="index.html#contact">聯絡我們</a></li>
             </ul>
         </nav>
@@ -374,7 +372,7 @@
     <section class="page-title-section">
         <span class="section-tag">COLLECTION</span>
         <h1 class="page-title">雲岫手製陶器</h1>
-        <p class="page-desc">揉合黏土、礦石與火候，淬煉出融入日常的侘寂美學。每一件作品，皆帶有職人手心的溫度與獨一無二的肌理。</p>
+        <p class="page-desc">揉合黏土、礦石與火候，淬煉出融入日常的侘寂美學。</p>
     </section>
 
     <div class="filter-container">
@@ -460,55 +458,66 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // 1. RWD 漢堡選單邏輯
-            const menuToggle = document.getElementById('mobile-menu');
-            const navLinks = document.querySelector('.nav-links');
+       document.addEventListener('DOMContentLoaded', () => {
+    // 1. RWD 漢堡選單邏輯
+    const menuToggle = document.getElementById('mobile-menu');
+    const navLinks = document.querySelector('.nav-links');
 
-            menuToggle.addEventListener('click', (e) => {
-                e.stopPropagation();
-                menuToggle.classList.toggle('active');
-                navLinks.classList.toggle('active');
-            });
+    if (menuToggle && navLinks) {
+        menuToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            menuToggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
 
-            document.querySelectorAll('.nav-links a').forEach(link => {
-                link.addEventListener('click', () => {
-                    menuToggle.classList.remove('active');
-                    navLinks.classList.remove('active');
-                });
-            });
+        // 【核心修正】點擊選單時的跳轉與滾動邏輯
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                const href = link.getAttribute('href');
 
-            document.addEventListener('click', (e) => {
-                if (!menuToggle.contains(e.target) && !navLinks.contains(e.target)) {
-                    menuToggle.classList.remove('active');
-                    navLinks.classList.remove('active');
+                // 情況 A：如果點擊的是跨頁連結（例如 gallery.html），完全不介入，讓瀏覽器正常跳轉
+                if (href === 'gallery.html' || !href.includes('#')) {
+                    return; 
                 }
-            });
 
-            // 2. 作品分類篩選器邏輯
-            const filterButtons = document.querySelectorAll('.filter-btn');
-            const galleryItems = document.querySelectorAll('.gallery-item');
-
-            filterButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    // 切換按鈕 active 樣式
-                    filterButtons.forEach(btn => btn.classList.remove('active'));
-                    button.classList.add('active');
-
-                    const filterValue = button.getAttribute('data-filter');
-
-                    // 篩選作品顯示/隱藏
-                    galleryItems.forEach(item => {
-                        const itemCategory = item.getAttribute('data-category');
-                        if (filterValue === 'all' || filterValue === itemCategory) {
-                            item.classList.remove('hide');
-                        } else {
-                            item.classList.add('hide');
-                        }
-                    });
-                });
+                // 情況 B：如果點擊的是同頁面的錨點（例如 index.html#about 或 #about）
+                // 手機版時，點擊後自動收起選單
+                menuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
             });
         });
+
+        // 點擊選單以外的地方自動收起
+        document.addEventListener('click', (e) => {
+            if (!menuToggle.contains(e.target) && !navLinks.contains(e.target)) {
+                menuToggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            }
+        });
+    }
+
+    // 2. 作品分類篩選器邏輯
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const galleryItems = document.querySelectorAll('.gallery-item');
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            const filterValue = button.getAttribute('data-filter');
+
+            galleryItems.forEach(item => {
+                const itemCategory = item.getAttribute('data-category');
+                if (filterValue === 'all' || filterValue === itemCategory) {
+                    item.classList.remove('hide');
+                } else {
+                    item.classList.add('hide');
+                }
+            });
+        });
+    });
+});
     </script>
 </body>
 </html>
